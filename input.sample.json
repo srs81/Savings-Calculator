@@ -4,7 +4,7 @@
   "startingSavings": {
     "Cash": 20000,
     "401K": 10000,
-    "House": 40000
+    "House": 40000,
   },
   "monthlyNumbers": {
     "Cash": {
@@ -26,6 +26,16 @@
       "2": 5000,
       "3": 5000,
       "7": -1000
+    }
+  },
+  "annualIncreases": {
+    "401K": 5
+  },
+  "specialNumbers": {
+    "Cash": {
+      "2017-9": 1000,
+      "2018-4": 1500,
+      "2018-7": -900
     }
   }
 }

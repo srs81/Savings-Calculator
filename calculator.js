@@ -39,8 +39,17 @@ angular.module('todoApp', [])
         "yearlyNumbers": {
           "Cash": {
             "2": 5000,
-            "3": 5000,
             "7": -1000
+          }
+        },
+        "annualIncreases": {
+          "401K": 5
+        },
+        "specialNumbers": {
+          "Cash": {
+            "2017-9": 1000,
+            "2018-4": 1500,
+            "2018-7": -900
           }
         }
       };
@@ -86,7 +95,7 @@ angular.module('todoApp', [])
       for (var year = startYear; year <= endYear; year++) {
         if (year > endYear) break;
 
-        for (var month = startMonth; month <= 12; month++) {
+        for (var month = 1; month <= 12; month++) {
           if (year == startYear && month < startMonth) continue;
           if (year == endYear && month == endMonth) break;
 
@@ -103,14 +112,23 @@ angular.module('todoApp', [])
               savingsThisMonth += number;
             }
             savings[sType] += savingsThisMonth;
-            if (sType == "401K") {
-              savings[sType] *= 1.005;
+
+            var aIncreases = cCtl.input.annualIncreases[sType];
+            if (aIncreases) {
+              savings[sType] *= 1 + (aIncreases / (100*12*1.4));
             }
 
             var yNumbers = cCtl.input.yearlyNumbers[sType];
             for (var m in yNumbers) {
               if (month == m) {
                 savings[sType] += yNumbers[m];
+              }
+            }
+
+            var sNumbers = cCtl.input.specialNumbers[sType];
+            for (var ym in sNumbers) {
+              if (toDate(year, month) == ym) {
+                savings[sType] += sNumbers[ym];
               }
             }
 
