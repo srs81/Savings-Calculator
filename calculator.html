@@ -1,0 +1,45 @@
+<!doctype html>
+<html ng-app="todoApp">
+  <head>
+    <title>Savings Calculator</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+    <script src="calculator.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <style type="text/css">
+      .month-header { padding: 5px; }
+      .month-container {
+        display: inline; float: left; margin: 5px 10px;
+      }
+    </style>
+  </head>
+
+  <body ng-controller="CalculatorController as calculatorCtl">
+    <div class="container">
+      <h2>Savings Calculator</h2>
+      <div ng-repeat="(month, numbers) in calculatorCtl.output" class="month-container">
+      <!--  ng-style="calculatorCtl.startOfYear(month) ? {'clear': 'both'} : {}" -->
+        <h5 class="month-header" ng-style="calculatorCtl.startOfYear(month) ? {'background-color': 'green'} : {}">{{month}}</h5>
+        <div ng-repeat="(type, number) in numbers">   
+          {{type}}: {{number | currency}}
+        </div>
+        <div>
+          TOTAL: {{calculatorCtl.outputTotals[month] | currency}}
+        </div>
+      </div>
+      <br clear="all" />
+
+      <a class="btn btn-default" href="#" role="button" ng-click="calculatorCtl.updateInput()">Update</a>
+      <textarea class="form-control" rows="20" cols="90" ng-model="calculatorCtl.inputJson"></textarea>
+    </div>
+  </body>
+</html>
+
+<!-- 
+Copyright 2017 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that
+can be found in the LICENSE file at http://angular.io/license
+-->
