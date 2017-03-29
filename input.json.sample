@@ -1,0 +1,31 @@
+{
+  "startDate": "2017-03-01T07:00:00.000-0500",
+  "endDate": "2019-07-01T07:00:00.000-0500",
+  "startingSavings": {
+    "Cash": 20000,
+    "401K": 10000,
+    "House": 40000,
+  },
+  "monthlyNumbers": {
+    "Cash": {
+      "Salary": 5000,
+      "Fed taxes": -1000,
+      "Social security & Medicare": -500,
+      "401K from salary": -500,
+      "House mortgage": -1000
+    },
+    "401K": {
+      "Savings": 1000
+    },
+    "House": {
+      "Ownership": 800
+    }
+  },
+  "yearlyNumbers": {
+    "Cash": {
+      "2": 5000,
+      "3": 5000,
+      "7": -1000
+    }
+  }
+}
