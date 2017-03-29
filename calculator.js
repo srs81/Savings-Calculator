@@ -122,7 +122,7 @@ angular.module('todoApp', ['ngCookies'])
               var metadata = mNumbers[type][1];
 
               var mStart = metadata['start'];
-              if (mStart && dateDiff(thisDate, mStart) <= 0) continue;  
+              if (mStart && dateDiff(thisDate, mStart) < 0) continue;  
 
               var mEnd = metadata['end'];
               if (mEnd && dateDiff(thisDate, mEnd) > 0) continue;  
