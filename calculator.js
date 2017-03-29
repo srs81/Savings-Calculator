@@ -1,5 +1,5 @@
-angular.module('todoApp', [])
-  .controller('CalculatorController', function($http) {
+angular.module('todoApp', ['ngCookies'])
+  .controller('CalculatorController', function($http, $cookies) {
     var cCtl = this;
 
     $http.get('input.json')
@@ -8,7 +8,10 @@ angular.module('todoApp', [])
       updateEverything();
     })
     .catch(function(response) {
-      cCtl.input = loadDefault();
+      cCtl.input = JSON.parse($cookies.get("input"));
+      if (!cCtl.input) {
+        cCtl.input = loadDefault();
+      }
       updateEverything();
     });
 
@@ -75,6 +78,7 @@ angular.module('todoApp', [])
 
     function updateEverything() {
       cCtl.inputJson = angular.toJson(cCtl.input);
+      $cookies.put("input", cCtl.inputJson);
 
       var startDate = fromDate(cCtl.input.startDate);
       var startYear = startDate.year;
