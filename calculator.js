@@ -8,7 +8,7 @@ angular.module('todoApp', ['ngCookies'])
       updateEverything();
     })
     .catch(function(response) {
-      cCtl.input = JSON.parse($cookies.get("input"));
+      cCtl.input = $cookies.get("input");
       if (!cCtl.input) {
         cCtl.input = loadDefault();
       }
@@ -26,17 +26,17 @@ angular.module('todoApp', ['ngCookies'])
         },
         "monthlyNumbers": {
           "Cash": {
-            "Salary": 5000,
-            "Fed taxes": -1000,
-            "Social security & Medicare": -500,
-            "401K from salary": -500,
-            "House mortgage": -1000
+            "Salary": [5000, {}],
+            "Fed taxes": [-1000, {}],
+            "Social security & Medicare": [-500, {}],
+            "401K from salary": [-500, {}],
+            "House mortgage": [-1000, {"end": "2018-9"}]
           },
           "401K": {
-            "Savings": 1000
+            "Savings": [1000, {}]
           },
           "House": {
-            "Ownership": 800
+            "Ownership": [800, {"end": "2018-10"}]
           }
         },
         "yearlyNumbers": {
@@ -69,6 +69,12 @@ angular.module('todoApp', ['ngCookies'])
 
     function toDate(yyyy, mm) {
       return "" + yyyy + "-" + mm;
+    }
+
+    function dateDiff(str1, str2) {
+      var d1 = fromDate(str1);
+      var d2 = fromDate(str2); 
+      return 12 * (d1.year - d2.year) + d1.month - d2.month;
     }
 
     cCtl.updateInput = function() {
@@ -112,7 +118,15 @@ angular.module('todoApp', ['ngCookies'])
             var savingsThisMonth = 0.0;
             var mNumbers = cCtl.input.monthlyNumbers[sType];
             for (var type in mNumbers) {
-              var number = mNumbers[type];
+              var number = mNumbers[type][0];
+              var metadata = mNumbers[type][1];
+
+              var mStart = metadata['start'];
+              if (mStart && dateDiff(thisDate, mStart) <= 0) continue;  
+
+              var mEnd = metadata['end'];
+              if (mEnd && dateDiff(thisDate, mEnd) > 0) continue;  
+
               savingsThisMonth += number;
             }
             savings[sType] += savingsThisMonth;
