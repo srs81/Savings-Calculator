@@ -1,6 +1,8 @@
-angular.module('todoApp', ['ngCookies'])
+angular.module('todoApp', ['ngCookies', 'chart.js'])
   .controller('CalculatorController', function($http, $cookies) {
     var cCtl = this;
+    cCtl.graph = {};
+
 
     $http.get('input.json')
     .then(function(response) {
@@ -98,8 +100,14 @@ angular.module('todoApp', ['ngCookies'])
       cCtl.output = {};
       cCtl.outputTotals = {};
 
+      cCtl.graph.data = [];
+      cCtl.graph.labels = [];
+      cCtl.graph.series = [];
+
       for (var sType in cCtl.input.startingSavings) {
         savings[sType] = cCtl.input.startingSavings[sType];
+        cCtl.graph.series.push(sType);
+        cCtl.graph.data.push([]);
       }
 
       for (var year = startYear; year <= endYear; year++) {
@@ -112,10 +120,12 @@ angular.module('todoApp', ['ngCookies'])
           if (year == endYear && month == endMonth) break;
 
           var thisDate = toDate(year, month);
+          cCtl.graph.labels.push(thisDate);
 
           cCtl.output[year][month] = {};
           cCtl.outputTotals[year][month] = 0.0;
 
+          var i = 0;
           for (var sType in cCtl.input.startingSavings) {
             var savingsThisMonth = 0.0;
             var mNumbers = cCtl.input.monthlyNumbers[sType];
@@ -153,6 +163,7 @@ angular.module('todoApp', ['ngCookies'])
             }
 
             cCtl.output[year][month][sType] = savings[sType];
+            cCtl.graph.data[i++].push(savings[sType]);
             cCtl.outputTotals[year][month] += savings[sType];
           }
         }

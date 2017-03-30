@@ -4,6 +4,8 @@
     <title>Savings Calculator</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-cookies.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
+    <script src="http://jtblin.github.io/angular-chart.js/dist/angular-chart.js"></script>
     <script src="calculator.js"></script>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -22,6 +24,11 @@
   <body ng-controller="CalculatorController as calculatorCtl">
     <div class="container">
       <h2>Savings Calculator</h2>
+      
+      <canvas id="bar" class="chart chart-bar"
+        chart-data="calculatorCtl.graph.data" chart-labels="calculatorCtl.graph.labels" chart-series="calculatorCtl.graph.series" chart-options="{scales: { yAxes: [{ stacked: true }], xAxes: [{ stacked: true }] }}">
+      </canvas>
+
       <div ng-repeat="(year, monthlyNumbers) in calculatorCtl.output" class="year-container">
         <div class="row">
           <div class="col-xs-12" style="background-color: #9c9; padding: 6px; margin-top: 10px">{{year}}</div>
