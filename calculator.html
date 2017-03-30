@@ -15,20 +15,28 @@
       .month-container {
         display: inline; float: left; margin: 5px 10px;
       }
+      .desc { color: #aaa; }
     </style>
   </head>
 
   <body ng-controller="CalculatorController as calculatorCtl">
     <div class="container">
       <h2>Savings Calculator</h2>
-      <div ng-repeat="(month, numbers) in calculatorCtl.output" class="month-container">
-      <!--  ng-style="calculatorCtl.startOfYear(month) ? {'clear': 'both'} : {}" -->
-        <h5 class="month-header" ng-style="calculatorCtl.startOfYear(month) ? {'background-color': 'green'} : {}">{{month}}</h5>
-        <div ng-repeat="(type, number) in numbers">   
-          {{type}}: {{number | currency}}
+      <div ng-repeat="(year, monthlyNumbers) in calculatorCtl.output" class="year-container">
+        <div class="row">
+          <div class="col-xs-12" style="background-color: #9c9; padding: 6px; margin-top: 10px">{{year}}</div>
         </div>
-        <div>
-          TOTAL: {{calculatorCtl.outputTotals[month] | currency}}
+        <div class="row">
+          <div class="col-xs-1" ng-repeat="(month, numbers) in monthlyNumbers" class="month-container">
+          <!--  ng-style="calculatorCtl.startOfYear(month) ? {'clear': 'both'} : {}" -->
+            <h5 class="month-header">{{month}}</h5>
+            <div ng-repeat="(type, number) in numbers">   
+              <span class="desc">{{type}}</span> {{number | currency}}
+            </div><br/>
+            <div>
+              <span class="desc">TOTAL</span> {{calculatorCtl.outputTotals[year][month] | currency}}
+            </div>
+          </div>
         </div>
       </div>
       <br clear="all" />

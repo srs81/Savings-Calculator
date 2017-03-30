@@ -104,6 +104,8 @@ angular.module('todoApp', ['ngCookies'])
 
       for (var year = startYear; year <= endYear; year++) {
         if (year > endYear) break;
+        cCtl.output[year] = {};
+        cCtl.outputTotals[year] = {};
 
         for (var month = 1; month <= 12; month++) {
           if (year == startYear && month < startMonth) continue;
@@ -111,8 +113,8 @@ angular.module('todoApp', ['ngCookies'])
 
           var thisDate = toDate(year, month);
 
-          cCtl.output[thisDate] = {};
-          cCtl.outputTotals[thisDate] = 0.0;
+          cCtl.output[year][month] = {};
+          cCtl.outputTotals[year][month] = 0.0;
 
           for (var sType in cCtl.input.startingSavings) {
             var savingsThisMonth = 0.0;
@@ -150,8 +152,8 @@ angular.module('todoApp', ['ngCookies'])
               }
             }
 
-            cCtl.output[thisDate][sType] = savings[sType];
-            cCtl.outputTotals[thisDate] += savings[sType];
+            cCtl.output[year][month][sType] = savings[sType];
+            cCtl.outputTotals[year][month] += savings[sType];
           }
         }
       }
