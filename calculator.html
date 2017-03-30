@@ -23,8 +23,14 @@
 
   <body ng-controller="CalculatorController as calculatorCtl">
     <div class="container">
-      <h2>Savings Calculator</h2>
-      
+      <h2>
+        Savings Calculator
+        <button class="btn btn-default" ng-click="calculatorCtl.updateInput()">Update</button>
+      </h2>
+
+      <textarea class="form-control" rows="5" cols="90" ng-model="calculatorCtl.inputJson"></textarea>
+      <br clear="all">
+
       <canvas id="bar" class="chart chart-bar"
         chart-data="calculatorCtl.graph.data" chart-labels="calculatorCtl.graph.labels" chart-series="calculatorCtl.graph.series" chart-options="{scales: { yAxes: [{ stacked: true }], xAxes: [{ stacked: true }] }}">
       </canvas>
@@ -46,10 +52,6 @@
           </div>
         </div>
       </div>
-      <br clear="all" />
-
-      <button class="btn btn-default" ng-click="calculatorCtl.updateInput()">Update</button>
-      <textarea class="form-control" rows="20" cols="90" ng-model="calculatorCtl.inputJson"></textarea>
     </div>
   </body>
 </html>
