@@ -52,8 +52,8 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
         },
         "specialNumbers": {
           "Cash": {
-            "2017-9": 1000,
-            "2018-4": 1500,
+            "2017-9": -10000,
+            "2018-4": 2000,
             "2018-7": -900
           }
         }
