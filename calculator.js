@@ -2,7 +2,21 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
   .controller('CalculatorController', function($http, $cookies) {
     var cCtl = this;
     cCtl.graph = {};
-
+    cCtl.chartOptions = {
+      scales: { 
+        yAxes: [
+          { 
+            stacked: true,
+            ticks: {
+              callback: function(value, index, values) {
+                return value.toLocaleString("en-US",{style:"currency", currency:"USD"});
+              }
+            }
+          }
+        ], 
+        xAxes: [{ stacked: true }] 
+      }
+    };
 
     $http.get('input.json')
     .then(function(response) {
@@ -32,7 +46,8 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
             "Fed taxes": [-1000, {}],
             "Social security & Medicare": [-500, {}],
             "401K from salary": [-500, {}],
-            "House mortgage": [-1000, {"end": "2018-9"}]
+            "House mortgage": [-1000, {"end": "2018-9"}],
+            "Bonus": [5001, {"start": "2017-6", "recurs": 6}]
           },
           "401K": {
             "Savings": [1000, {}]
@@ -110,6 +125,7 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
         cCtl.graph.data.push([]);
       }
 
+      var copyForRecurs = angular.copy(cCtl.input.monthlyNumbers);
       for (var year = startYear; year <= endYear; year++) {
         if (year > endYear) break;
         cCtl.output[year] = {};
@@ -138,6 +154,19 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
 
               var mEnd = metadata['end'];
               if (mEnd && dateDiff(thisDate, mEnd) > 0) continue;  
+
+              var mRecurs = metadata['recurs'];
+              if (mRecurs) {
+                // Need to get handle to object to persist changes
+                var rObj = copyForRecurs[sType][type][1];
+                rObj.recurs--;
+                if (rObj.recurs == 0) {
+                  rObj.recurs = mRecurs;
+                }
+                if (rObj.recurs != mRecurs - 1) {
+                  continue;
+                }
+              }
 
               savingsThisMonth += number;
             }

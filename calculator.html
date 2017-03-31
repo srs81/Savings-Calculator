@@ -32,7 +32,7 @@
       <br clear="all">
 
       <canvas id="bar" class="chart chart-bar"
-        chart-data="calculatorCtl.graph.data" chart-labels="calculatorCtl.graph.labels" chart-series="calculatorCtl.graph.series" chart-options="{scales: { yAxes: [{ stacked: true }], xAxes: [{ stacked: true }] }}">
+        chart-data="calculatorCtl.graph.data" chart-labels="calculatorCtl.graph.labels" chart-series="calculatorCtl.graph.series" chart-options="calculatorCtl.chartOptions">
       </canvas>
 
       <div ng-repeat="(year, monthlyNumbers) in calculatorCtl.output" class="year-container">
