@@ -111,7 +111,8 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
 
     function updateEverything() {
       cCtl.inputJson = angular.toJson(cCtl.input);
-      $cookies.put("input", cCtl.inputJson);
+      // Move cookie save into separate function
+      // $cookies.put("input", cCtl.inputJson);
 
       var startDate = fromDate(cCtl.input.startDate);
       var startYear = startDate.year;
