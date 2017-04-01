@@ -18,19 +18,29 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
       }
     };
 
-    $http.get('input.json')
-    .then(function(response) {
-      cCtl.input = response.data;                
+    // Try loading from cookie first
+    var cookieInput = $cookies.get("input");
+    if (cookieInput) {
+      cCtl.input = JSON.parse(cookieInput);
       updateEverything();
-    })
-    .catch(function(response) {
-      cCtl.input = $cookies.get("input");
-      if (!cCtl.input) {
-        cCtl.input = loadDefault();
-      }
-      updateEverything();
-    });
+    }
 
+    // If no cookie value, get data from input.sample.json
+    if (!cCtl.input) {
+      $http.get('input.sample.json')
+      .then(function(response) {
+        cCtl.input = response.data;                
+        updateEverything();
+      })
+      .catch(function(response) {
+        // If we can't read from input.json 
+        // (run locally from file://), use JS defaults
+        cCtl.input = loadDefault();
+        updateEverything();
+      });
+    }
+
+    // Return a default object for input
     function loadDefault() {
       return {
         "startDate": "2017-3",
