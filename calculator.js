@@ -18,13 +18,6 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
       }
     };
 
-    // Try loading from cookie first
-    var cookieInput = $cookies.get("input");
-    if (cookieInput) {
-      cCtl.input = JSON.parse(cookieInput);
-      updateEverything();
-    }
-
     // If no cookie value, get data from input.sample.json
     if (!cCtl.input) {
       $http.get('input.sample.json')
@@ -104,6 +97,22 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
       return 12 * (d1.year - d2.year) + d1.month - d2.month;
     }
 
+    cCtl.saveInput = function() {
+      $cookies.put("input", cCtl.inputJson);
+    }
+
+    cCtl.loadInput = function() {
+      var cookieInput = JSON.parse($cookies.get("input"));
+      if (cookieInput) {
+        cCtl.input = JSON.parse(cookieInput);
+        updateEverything();
+      }
+    }
+
+    cCtl.deleteInput = function() {
+      $cookies.remove("input");
+    }
+
     cCtl.updateInput = function() {
       cCtl.input = angular.fromJson(cCtl.inputJson);
       updateEverything();  
@@ -112,7 +121,6 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
     function updateEverything() {
       cCtl.inputJson = angular.toJson(cCtl.input);
       // Move cookie save into separate function
-      // $cookies.put("input", cCtl.inputJson);
 
       var startDate = fromDate(cCtl.input.startDate);
       var startYear = startDate.year;
