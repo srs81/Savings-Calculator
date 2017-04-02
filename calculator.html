@@ -27,8 +27,9 @@
         Savings Calculator
         <button class="btn btn-default" ng-click="calculatorCtl.updateInput()"><i class="glyphicon glyphicon-refresh"></i> Update</button>
         <button class="btn btn-default" ng-click="calculatorCtl.saveInput()"><i class="glyphicon glyphicon-floppy-disk"></i></button>
-        <button class="btn btn-default" ng-click="calculatorCtl.loadInput()"><i class="glyphicon glyphicon-folder-open"></i></button>
-        <button class="btn btn-default" ng-click="calculatorCtl.deleteInput()"><i class="glyphicon glyphicon-trash"></i></button>
+        <button class="btn btn-default" ng-click="calculatorCtl.loadInput()" ng-show="calculatorCtl.savedInput"><i class="glyphicon glyphicon-folder-open"></i></button>
+        <button class="btn btn-default" ng-click="calculatorCtl.deleteInput()" ng-show="calculatorCtl.savedInput"><i class="glyphicon glyphicon-trash"></i></button>
+        <small ng-show="calculatorCtl.savedMessage">{{calculatorCtl.savedMessage}}</small>
       </h2>
 
       <textarea class="form-control" rows="5" cols="90" ng-model="calculatorCtl.inputJson"></textarea>

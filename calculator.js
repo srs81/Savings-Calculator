@@ -1,5 +1,5 @@
 angular.module('todoApp', ['ngCookies', 'chart.js'])
-  .controller('CalculatorController', function($http, $cookies) {
+  .controller('CalculatorController', function($http, $cookies, $timeout) {
     var cCtl = this;
     cCtl.graph = {};
     cCtl.chartOptions = {
@@ -17,6 +17,11 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
         xAxes: [{ stacked: true }] 
       }
     };
+
+    // If this cookie is set, user has saved input before
+    if ($cookies.get("input")) {
+      cCtl.savedInput = true;
+    }
 
     // If no cookie value, get data from input.sample.json
     if (!cCtl.input) {
@@ -98,11 +103,16 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
     }
 
     cCtl.saveInput = function() {
+      cCtl.savedMessage = "Saving...";
+      deleteSavedMessage();
       $cookies.put("input", cCtl.inputJson);
+      cCtl.savedInput = true;
     }
 
     cCtl.loadInput = function() {
-      var cookieInput = JSON.parse($cookies.get("input"));
+      cCtl.savedMessage = "Loading...";
+      deleteSavedMessage();
+      var cookieInput = $cookies.get("input");
       if (cookieInput) {
         cCtl.input = JSON.parse(cookieInput);
         updateEverything();
@@ -111,6 +121,11 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
 
     cCtl.deleteInput = function() {
       $cookies.remove("input");
+      cCtl.savedInput = false;
+    }
+
+    function deleteSavedMessage() {
+      $timeout(function() { delete cCtl.savedMessage; }, 100);      
     }
 
     cCtl.updateInput = function() {
