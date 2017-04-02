@@ -49,20 +49,20 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
           "House": 40000
         },
         "monthlyNumbers": {
-          "Cash": {
-            "Salary": [5000, {}],
-            "Fed taxes": [-1000, {}],
-            "Social security & Medicare": [-500, {}],
-            "401K from salary": [-500, {}],
-            "House mortgage": [-1000, {"end": "2018-9"}],
-            "Bonus": [5001, {"start": "2017-6", "recurs": 6}]
-          },
-          "401K": {
-            "Savings": [1000, {}]
-          },
-          "House": {
-            "Ownership": [800, {"end": "2018-10"}]
-          }
+          "Cash": [
+            [5000, "Salary", {}],
+            [-1000, "Fed taxes", {}],
+            [-500, "Social security & Medicare", {}],
+            [-500, "401K from salary", {}],
+            [-1000, "House mortgage", {"end": "2018-9"}],
+            [5001, "Bonus", {"start": "2017-6", "recurs": 6}]
+          ],
+          "401K": [
+            [1000, "Savings", {}]
+          ],
+          "House": [
+            [800, "Ownership", {"end": "2018-10"}]
+          ]
         },
         "yearlyNumbers": {
           "Cash": {
@@ -179,9 +179,9 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
           for (var sType in cCtl.input.startingSavings) {
             var savingsThisMonth = 0.0;
             var mNumbers = cCtl.input.monthlyNumbers[sType];
-            for (var type in mNumbers) {
-              var number = mNumbers[type][0];
-              var metadata = mNumbers[type][1];
+            for (var count in mNumbers) {
+              var number = mNumbers[count][0];
+              var metadata = mNumbers[count][2];
 
               var mStart = metadata['start'];
               if (mStart && dateDiff(thisDate, mStart) < 0) continue;  
@@ -192,7 +192,7 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
               var mRecurs = metadata['recurs'];
               if (mRecurs) {
                 // Need to get handle to object to persist changes
-                var rObj = copyForRecurs[sType][type][1];
+                var rObj = copyForRecurs[sType][count][2];
                 rObj.recurs--;
                 if (rObj.recurs == 0) {
                   rObj.recurs = mRecurs;
