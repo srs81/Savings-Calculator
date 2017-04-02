@@ -66,8 +66,8 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
         },
         "yearlyNumbers": {
           "Cash": {
-            "2": 5000,
-            "7": -1000
+            "2": [5000, "Annual bonus"],
+            "7": [-1000, "House taxes"]
           }
         },
         "annualIncreases": {
@@ -75,9 +75,9 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
         },
         "specialNumbers": {
           "Cash": {
-            "2017-9": -10000,
-            "2018-4": 2000,
-            "2018-7": -900
+            "2017-9": [-10000, "Big expense"],
+            "2018-4": [2000, "Friend paid me back"],
+            "2018-7": [-900, "House repairs"]
           }
         }
       };
@@ -214,14 +214,14 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
             var yNumbers = cCtl.input.yearlyNumbers[sType];
             for (var m in yNumbers) {
               if (month == m) {
-                savings[sType] += yNumbers[m];
+                savings[sType] += yNumbers[m][0];
               }
             }
 
             var sNumbers = cCtl.input.specialNumbers[sType];
             for (var ym in sNumbers) {
               if (toDate(year, month) == ym) {
-                savings[sType] += sNumbers[ym];
+                savings[sType] += sNumbers[ym][0];
               }
             }
 
