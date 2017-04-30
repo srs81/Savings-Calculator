@@ -16,7 +16,13 @@
     <style type="text/css">
       .month-header { padding: 5px; }
       .month-container {
-        display: inline; float: left; margin: 5px 10px;
+        display: inline; float: left; margin: 0; padding: 5px;
+      }
+      .year-inner-container {
+        background-color: #9c9; padding: 6px; margin-top: 10px
+      }
+      .highlight {
+        background-color: #efe;
       }
       .desc { color: #aaa; }
     </style>
@@ -42,12 +48,19 @@
 
       <div ng-repeat="(year, monthlyNumbers) in calculatorCtl.output" class="year-container">
         <div class="row">
-          <div class="col-xs-12" style="background-color: #9c9; padding: 6px; margin-top: 10px">{{year}}</div>
+          <div class="col-xs-12 year-inner-container">{{year}}</div>
         </div>
         <div class="row">
-          <div class="col-xs-1" ng-repeat="(month, numbers) in monthlyNumbers" class="month-container">
+          <div class="col-xs-1 month-container" ng-class="{highlight: over}" 
+            ng-mouseenter="over = true" ng-mouseleave="over = false"
+            ng-repeat="(month, numbers) in monthlyNumbers">
           <!--  ng-style="calculatorCtl.startOfYear(month) ? {'clear': 'both'} : {}" -->
-            <h5 class="month-header">{{month}}</h5>
+            <h5 class="month-header">
+              {{month}}
+              <button class="btn btn-xs btn-success" ng-show="over">
+                <i class="glyphicon glyphicon-zoom-in"></i>
+              </button>
+            </h5>
             <div ng-repeat="(type, number) in numbers">   
               <span class="desc">{{type}}</span> {{number | currency}}
             </div><br/>
