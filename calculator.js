@@ -15,7 +15,10 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
           }
         ], 
         xAxes: [{ stacked: true }] 
-      }
+      },
+      legend: {
+          display: true
+      }      
     };
 
     // If this cookie is set, user has saved input before
