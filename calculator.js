@@ -21,6 +21,8 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
       }      
     };
 
+    cCtl.showDetails = {};
+
     // If this cookie is set, user has saved input before
     if ($cookies.get("input")) {
       cCtl.savedInput = true;
@@ -151,6 +153,7 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
       var savings = {};
       cCtl.output = {};
       cCtl.outputTotals = {};
+      cCtl.details = {};
 
       cCtl.graph.data = [];
       cCtl.graph.labels = [];
@@ -167,6 +170,7 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
         if (year > endYear) break;
         cCtl.output[year] = {};
         cCtl.outputTotals[year] = {};
+        cCtl.details[year] = {};
 
         for (var month = 1; month <= 12; month++) {
           if (year == startYear && month < startMonth) continue;
@@ -176,14 +180,18 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
           cCtl.graph.labels.push(thisDate);
 
           cCtl.output[year][month] = {};
+          cCtl.details[year][month] = {};
           cCtl.outputTotals[year][month] = 0.0;
 
           var i = 0;
           for (var sType in cCtl.input.startingSavings) {
+            cCtl.details[year][month][sType] = {};
+
             var savingsThisMonth = 0.0;
             var mNumbers = cCtl.input.monthlyNumbers[sType];
             for (var count in mNumbers) {
               var number = mNumbers[count][0];
+              var comment = mNumbers[count][1];
               var metadata = mNumbers[count][2];
 
               var mStart = metadata['start'];
@@ -206,25 +214,34 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
               }
 
               savingsThisMonth += number;
+              cCtl.details[year][month][sType][comment] = number;
             }
             savings[sType] += savingsThisMonth;
 
             var aIncreases = cCtl.input.annualIncreases[sType];
             if (aIncreases) {
+              var oldNumber = savings[sType];
               savings[sType] *= 1 + (aIncreases / (100*12*1.4));
+              cCtl.details[year][month][sType]["Monthly increase"] = savings[sType] - oldNumber;
             }
 
             var yNumbers = cCtl.input.yearlyNumbers[sType];
             for (var m in yNumbers) {
               if (month == m) {
-                savings[sType] += yNumbers[m][0];
+                var number = yNumbers[m][0];
+                var comment = yNumbers[m][1];
+                savings[sType] += number;
+                cCtl.details[year][month][sType][comment] = number;
               }
             }
 
             var sNumbers = cCtl.input.specialNumbers[sType];
             for (var ym in sNumbers) {
               if (toDate(year, month) == ym) {
-                savings[sType] += sNumbers[ym][0];
+                var number = sNumbers[ym][0];
+                var comment = sNumbers[ym][0];
+                savings[sType] += number;
+                cCtl.details[year][month][sType][comment] = number;
               }
             }
 

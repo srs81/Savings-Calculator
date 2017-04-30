@@ -57,7 +57,8 @@
           <!--  ng-style="calculatorCtl.startOfYear(month) ? {'clear': 'both'} : {}" -->
             <h5 class="month-header">
               {{month}}
-              <button class="btn btn-xs btn-success" ng-show="over">
+              <button class="btn btn-xs btn-success" ng-show="over"
+                ng-click="calculatorCtl.showDetails = { 'year': year, 'month': month }">
                 <i class="glyphicon glyphicon-zoom-in"></i>
               </button>
             </h5>
@@ -70,6 +71,13 @@
           </div>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-xs-12" ng-show="calculatorCtl.showDetails">
+          <pre>{{ calculatorCtl.details[calculatorCtl.showDetails['year']][calculatorCtl.showDetails['month']] | json}}</pre>
+        </div>
+      </div>
+
     </div>
   </body>
 </html>
