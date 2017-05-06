@@ -2,6 +2,9 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
   .controller('CalculatorController', function($http, $cookies, $timeout) {
     var cCtl = this;
     cCtl.graph = {};
+    cCtl.showDetails = {};
+
+    // Options for Chart.JS graph
     cCtl.chartOptions = {
       scales: { 
         yAxes: [
@@ -20,8 +23,6 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
           display: true
       }      
     };
-
-    cCtl.showDetails = {};
 
     // If this cookie is set, user has saved input before
     if ($cookies.get("input")) {
@@ -88,25 +89,30 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
       };
     }
 
+    // Is this start of the year?
     cCtl.startOfYear = function(date) {
       return fromDate(date).month == 1;
     }
 
+    // Convert from string to date object
     function fromDate(str) {
       var arr = str.split("-");
       return { "year": parseInt(arr[0]), "month": parseInt(arr[1]) };
     }
 
+    // Convert to string from date object
     function toDate(yyyy, mm) {
       return "" + yyyy + "-" + mm;
     }
 
+    // Check difference between two string objects
     function dateDiff(str1, str2) {
       var d1 = fromDate(str1);
       var d2 = fromDate(str2); 
       return 12 * (d1.year - d2.year) + d1.month - d2.month;
     }
 
+    // Save input JSON to a cookie
     cCtl.saveInput = function() {
       cCtl.savedMessage = "Saving...";
       deleteSavedMessage();
@@ -114,6 +120,7 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
       cCtl.savedInput = true;
     }
 
+    // Load input JSON from a cookie
     cCtl.loadInput = function() {
       cCtl.savedMessage = "Loading...";
       deleteSavedMessage();
@@ -124,24 +131,29 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
       }
     }
 
+    // Delete the stored cookie
     cCtl.deleteInput = function() {
       $cookies.remove("input");
       cCtl.savedInput = false;
     }
 
+    // Show the user that we are deleting the input locally
     function deleteSavedMessage() {
       $timeout(function() { delete cCtl.savedMessage; }, 100);      
     }
 
+    // Update input parameters by loading from JSON string
     cCtl.updateInput = function() {
       cCtl.input = angular.fromJson(cCtl.inputJson);
       updateEverything();  
     }
 
+    // Main internal function that updates all data structures
+    // from updated JSON input.
     function updateEverything() {
       cCtl.inputJson = angular.toJson(cCtl.input);
-      // Move cookie save into separate function
 
+      // Calculate internal start and end date objects
       var startDate = fromDate(cCtl.input.startDate);
       var startYear = startDate.year;
       var startMonth = startDate.month;
@@ -150,6 +162,7 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
       var endYear = endDate.year;
       var endMonth = endDate.month;
 
+      // Initialize variables and objects
       var savings = {};
       cCtl.output = {};
       cCtl.outputTotals = {};
@@ -159,23 +172,34 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
       cCtl.graph.labels = [];
       cCtl.graph.series = [];
 
+      // Use startingSavings numbers for local objects
       for (var sType in cCtl.input.startingSavings) {
         savings[sType] = cCtl.input.startingSavings[sType];
         cCtl.graph.series.push(sType);
         cCtl.graph.data.push([]);
       }
 
+      // Make a copy to keep track of recurring numbers
       var copyForRecurs = angular.copy(cCtl.input.monthlyNumbers);
+
+      // Iterate over each year from start to end
       for (var year = startYear; year <= endYear; year++) {
+        // If we are over the final year, quit
         if (year > endYear) break;
+
+        // Initialize objects for this year
         cCtl.output[year] = {};
         cCtl.outputTotals[year] = {};
         cCtl.details[year] = {};
 
+        // Iterate over every month for this year
         for (var month = 1; month <= 12; month++) {
+          // If we are before the first month, continue
           if (year == startYear && month < startMonth) continue;
+          // If we are after the last month, quit
           if (year == endYear && month == endMonth) break;
 
+          // Initalize parameters for this month
           var thisDate = toDate(year, month);
           cCtl.graph.labels.push(thisDate);
 
@@ -184,25 +208,30 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
           cCtl.outputTotals[year][month] = 0.0;
 
           var i = 0;
+          // For each category in savings
           for (var sType in cCtl.input.startingSavings) {
             cCtl.details[year][month][sType] = {};
 
             var savingsThisMonth = 0.0;
             var mNumbers = cCtl.input.monthlyNumbers[sType];
+            // For each monthly income or expense related to this category
             for (var count in mNumbers) {
               var number = mNumbers[count][0];
               var comment = mNumbers[count][1];
               var metadata = mNumbers[count][2];
 
+              // Is there a start date meta-data for this income-expense?
               var mStart = metadata['start'];
               if (mStart && dateDiff(thisDate, mStart) < 0) continue;  
 
+              // Is there an end date meta-data for this income-expense?
               var mEnd = metadata['end'];
               if (mEnd && dateDiff(thisDate, mEnd) > 0) continue;  
 
+              // Does this income-expense recur every few months?
               var mRecurs = metadata['recurs'];
               if (mRecurs) {
-                // Need to get handle to object to persist changes
+                // Get handle to clone object to keep track of recurring
                 var rObj = copyForRecurs[sType][count][2];
                 rObj.recurs--;
                 if (rObj.recurs == 0) {
@@ -213,20 +242,25 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
                 }
               }
 
+              // Add up the savings, as well as detailed breakdown
               savingsThisMonth += number;
               cCtl.details[year][month][sType][comment] = number;
             }
             savings[sType] += savingsThisMonth;
 
+            // Is there an annual percentage increase for this number
             var aIncreases = cCtl.input.annualIncreases[sType];
             if (aIncreases) {
               var oldNumber = savings[sType];
+              // Approximate the annual percentage increase per month
               savings[sType] *= 1 + (aIncreases / (100*12*1.4));
               cCtl.details[year][month][sType]["Monthly increase"] = savings[sType] - oldNumber;
             }
 
+            // Are there yearly income-expense numbers for this category?
             var yNumbers = cCtl.input.yearlyNumbers[sType];
             for (var m in yNumbers) {
+              // Do those numbers apply for this month?
               if (month == m) {
                 var number = yNumbers[m][0];
                 var comment = yNumbers[m][1];
@@ -235,8 +269,10 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
               }
             }
 
+            // Are there special one-off income-expense numbers for this category?
             var sNumbers = cCtl.input.specialNumbers[sType];
             for (var ym in sNumbers) {
+              // Do they apply to this year-month?
               if (toDate(year, month) == ym) {
                 var number = sNumbers[ym][0];
                 var comment = sNumbers[ym][0];
@@ -245,6 +281,7 @@ angular.module('todoApp', ['ngCookies', 'chart.js'])
               }
             }
 
+            // Finalize the calculated numbers
             cCtl.output[year][month][sType] = savings[sType];
             cCtl.graph.data[i++].push(savings[sType]);
             cCtl.outputTotals[year][month] += savings[sType];
