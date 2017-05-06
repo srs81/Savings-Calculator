@@ -1,31 +1,31 @@
 {
-  "startDate": "2017-03",
-  "endDate": "2019-07",
+  "startDate": "2017-3",
+  "endDate": "2019-7",
   "startingSavings": {
     "Cash": 20000,
     "401K": 10000,
-    "House": 40000,
+    "House": 40000
   },
   "monthlyNumbers": {
-    "Cash": {
-      "Salary": 5000,
-      "Fed taxes": -1000,
-      "Social security & Medicare": -500,
-      "401K from salary": -500,
-      "House mortgage": -1000
-    },
-    "401K": {
-      "Savings": 1000
-    },
-    "House": {
-      "Ownership": 800
-    }
+    "Cash": [
+      [5000, "Salary", {}],
+      [-1000, "Fed taxes", {}],
+      [-500, "Social security & Medicare", {}],
+      [-500, "401K from salary", {}],
+      [-1000, "House mortgage", {"end": "2018-9"}],
+      [5001, "Bonus", {"start": "2017-6", "recurs": 6}]
+    ],
+    "401K": [
+      [1000, "Savings", {}]
+    ],
+    "House": [
+      [800, "Ownership", {"end": "2018-10"}]
+    ]
   },
   "yearlyNumbers": {
     "Cash": {
-      "2": 5000,
-      "3": 5000,
-      "7": -1000
+      "2": [5000, "Annual bonus"],
+      "7": [-1000, "House taxes"]
     }
   },
   "annualIncreases": {
@@ -33,9 +33,9 @@
   },
   "specialNumbers": {
     "Cash": {
-      "2017-9": 1000,
-      "2018-4": 1500,
-      "2018-7": -900
+      "2017-9": [-10000, "Big expense"],
+      "2018-4": [2000, "Friend paid me back"],
+      "2018-7": [-900, "House repairs"]
     }
   }
 }
