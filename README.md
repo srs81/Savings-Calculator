@@ -6,6 +6,10 @@ You can use it for calculating savings, net worth, profit / loss, income / expen
 
 This is meant to be run in your browser as a as a fully HTML / JS application, either online here on Github Pages, or locally on your computer. This has no dependencies on any backend service, and rendering is done fully in your browser.
 
+## [Screenshot]
+
+![Savings Calculator](screenshot.png "Screenshot of the Savings Calculator")
+
 ## [Demo](https://srs81.github.io/Savings-Calculator/calculator.html)
 
 You can run a [demo right here on Github pages](https://srs81.github.io/Savings-Calculator/calculator.html) using the link above. 
